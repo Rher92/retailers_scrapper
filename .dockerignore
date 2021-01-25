@@ -1,0 +1,9 @@
+venv
+.dockerignore
+.gitignore
+docker-compose
+Dockerfile
+retailer
+postgres
+celerybeat-schedule
+geckodriver.log

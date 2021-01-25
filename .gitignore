@@ -1,0 +1,7 @@
+venv
+__pycache__
+retailer
+postgres
+celerybeat-schedule
+geckodriver.log
+celerybeat.pid
