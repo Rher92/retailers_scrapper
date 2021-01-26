@@ -36,5 +36,17 @@ class Product(BaseCreatedUpdatedModel):
         null=False,
         blank=False,        
     )
+    weight_unit = models.CharField(
+        max_length=10,
+        null=True,
+        blank=True,
+        default=None
+    )
+    price_weight_unit = models.FloatField(
+        null=False,
+        blank=False,
+        default=0.0        
+    )
+
     def __str__(self):
         return f'name: {self.name} - ean: {self.ean}'
