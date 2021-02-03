@@ -9,10 +9,7 @@ SQL_PASSWORD=postgres
 SQL_HOST=database
 SQL_PORT=5432
 
-RABBITMQ_DEFAULT_USER=admin
-RABBITMQ_DEFAULT_PASS=admin
-
-CELERY_BROKER=amqp://admin:admin@rabbitmq:5672/
+CELERY_BROKER=redis://redis:6379/0
 CELERY_BACKEND=redis://redis:6379/0
 
 CELERY_FLOWER_USER=admin
@@ -24,6 +21,9 @@ SEEING_ALL=Ver todo
 SEEING_ALL_SUPERMERCADO=Ver todo supermercado
 SCROLL_PAUSE_TIME=10
 ITEM_SUPERMERCADO=Supermercado
+
+#Tottus
+TOTTUS_URL=https://www.plazavea.com.pe/
 
 MEMCACHED=memcached
 MEMCACHED_PORT=11211

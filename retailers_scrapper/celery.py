@@ -20,31 +20,3 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'retailers_scrapper.settings')
 app = Celery("retailers_scrapper")
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
-
-
-@app.task
-def add(x, y):
-    # from celery.contrib import rdb
-    # rdb.set_trace()
-
-    # this is for test purpose
-    time.sleep(10)
-    return x / y
-
-
-# @after_setup_logger.connect()
-# def on_after_setup_logger(logger, **kwargs):
-#     """
-#     This show you how to customize your Celery log
-#     """
-#     print(logging.Logger.manager.loggerDict.keys())
-#
-#
-# @after_setup_task_logger.connect()
-# def on_after_setup_task_logger(logger, **kwargs):
-#     formatter = logger.handlers[1].formatter
-#     file_handler = logging.FileHandler('celery_task.log')
-#     file_handler.setFormatter(formatter)
-#     logger.addHandler(file_handler)
-
-

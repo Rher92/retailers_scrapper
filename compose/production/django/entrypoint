@@ -31,16 +31,16 @@ done
 >&2 echo 'PostgreSQL is available'
 
 
-rabbitmq_ready() {
-    echo "Waiting for rabbitmq..."
+redis_ready() {
+    echo "Waiting for redis..."
 
-    while ! nc -z rabbitmq 5672; do
+    while ! nc -z redis 6379; do
       sleep 1
     done
 
-    echo "rabbitmq started"
+    echo "redis started"
 }
 
-rabbitmq_ready
+redis_ready
 
 exec "$@"

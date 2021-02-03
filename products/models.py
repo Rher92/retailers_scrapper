@@ -5,6 +5,17 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
 
+class Price(BaseCreatedUpdatedModel):
+    price = models.FloatField(
+        null=False,
+        blank=False,
+        default=0.0        
+    )
+
+    def __str__(self):
+        return f'{self.price}'
+
+
 class Product(BaseCreatedUpdatedModel):
     name = models.CharField(
         max_length=255,
@@ -17,36 +28,38 @@ class Product(BaseCreatedUpdatedModel):
         blank=True,        
     )
     ean = models.CharField(
-        max_length=100,
+        max_length=30,
         null=True,
         blank=True,        
-    )
-    regular_price = models.FloatField(
-        null=False,
-        blank=False,
-        default=0.0        
-    )
-    promotion_price = models.FloatField(
-        null=False,
-        blank=False,
-        default=0.0        
     )
     url = models.URLField(
         max_length=200,
         null=False,
         blank=False,        
     )
-    weight_unit = models.CharField(
-        max_length=10,
+    product_unit = models.CharField(
+        max_length=100,
         null=True,
         blank=True,
-        default=None
     )
-    price_weight_unit = models.FloatField(
-        null=False,
-        blank=False,
-        default=0.0        
-    )
+    regular_price = models.ManyToManyField(
+        Price, 
+        related_name='regular_prices',
+        related_query_name="regular_price",
+        blank=True,        
+    )        
+    promotion_price = models.ManyToManyField(
+        Price, 
+        related_name='promotion_prices',
+        related_query_name="promotion_price",
+        blank=True,        
+    )       
+    card_promotion_price = models.ManyToManyField(
+        Price, 
+        related_name='card_promotion_prices',
+        related_query_name="card_promotion_price",
+        blank=True,        
+    )     
 
     def __str__(self):
-        return f'name: {self.name} - ean: {self.ean}'
+        return f'Name: {self.name} - SKU: {self.sku} - Django ID: {self.id}'

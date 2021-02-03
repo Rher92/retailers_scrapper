@@ -3,6 +3,7 @@ DEBUG=1
 SECRET_KEY=dbaa1_i7%*3r9-=z-+_mz4r-!qeed@(-a_r(g@k8jo8y3r27%m
 DJANGO_SETTINGS_MODULE=retailers_scrapper.settings    
 
+SQL_ENGINE=django.db.backends.postgresql
 SQL_DATABASE=retailer
 SQL_USER=postgres
 SQL_PASSWORD=postgres
@@ -20,8 +21,11 @@ CELERY_BROKER=redis://redis:6379/0
 CELERY_BACKEND=redis://redis:6379/0
 
 #Plaza Vea
-URL=https://www.plazavea.com.pe/
+PV_URL=https://www.plazavea.com.pe/
 SEEING_ALL=Ver todo
 SEEING_ALL_SUPERMERCADO=Ver todo supermercado
 SCROLL_PAUSE_TIME=10
 ITEM_SUPERMERCADO=Supermercado
+
+#Tottus
+TOTTUS_URL=https://www.plazavea.com.pe/

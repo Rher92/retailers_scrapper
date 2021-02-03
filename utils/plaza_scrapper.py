@@ -14,11 +14,11 @@ from selenium.webdriver.chrome.options import Options
 from pyvirtualdisplay import Display
 
 from .decorators import timer
-from products.tasks import save_instance
+from products.tasks import parse_instance_from_plaza_vea
 
 
 def get_links(browser):
-    URL = os.environ.get('URL')
+    URL = os.environ.get('PV_URL')
     SEEING_ALL = os.environ.get('SEEING_ALL')
     SEEING_ALL_SUPERMERCADO = os.environ.get('SEEING_ALL_SUPERMERCADO')
     SCROLL_PAUSE_TIME = os.environ.get('SCROLL_PAUSE_TIME')
@@ -97,66 +97,6 @@ def get_scroll_page(browser, link):
     return items_links
 
 
-def fetch_item(link):
-    future = Future()
-    thread = threading.Thread(
-        target=(lambda: future.set_result(generate_request(link)))) 
-    thread.start()
-    return future
-
-
-def generate_request(link):
-    _return = None
-    response = requests.get(link)
-    if response.status_code == 200:
-        _return = response
-    return _return    
-
-
-def parse_info(future):
-    response = future.result()
-    soup = BeautifulSoup(response.content, 'html.parser')
-    scripts=soup.find_all('script')
-
-    for script in scripts:
-        if 'vtex.events.addData' in str(script.string):
-            script_string = script.string
-            parsed_string = script_string.strip().split('(')[1].split(')')[0]
-            data_json_vtex = json.loads(parsed_string)
-        elif 'vtxctx' in str(script.string):
-            script_string = script.string
-            parsed_string = script_string.strip().split('=')[1].strip().split(';')[0]
-            data_json_vtxctx = json.loads(parsed_string)
-
-    name = str(soup.select('.ProductCard__name')[0].find('div').text)
-    ean = data_json_vtex.get('productEans')
-    regular_price = float(data_json_vtex.get('productListPriceTo'))
-    promotion_price = float(data_json_vtex.get('productPriceTo'))
-    url = str(response.url)
-    
-    sku = data_json_vtex.get('productReferenceId')
-    if not sku:
-        sku = data_json_vtxctx.get('skus')
-
-    if ean:
-        ean = str(ean[0])
-
-    if sku:
-        sku = str(sku)
-
-    json_instance = {
-        'sku': sku,
-        'name': name,
-        'ean': ean,
-        'regular_price': regular_price,
-        'promotion_price': promotion_price,
-        'url': url
-    }
-
-    json_instance = json.dumps(json_instance)
-    save_instance.delay(json_instance)
-    print(f'sku:{sku} - name:{name} - ean:{ean} - regular_price:{regular_price} - promotion_price: {promotion_price}')
-
 @timer
 def start_plazavea():
     items_sent = 0
@@ -169,20 +109,16 @@ def start_plazavea():
             browser = webdriver.Firefox(firefox_options=opts)
             links = get_links(browser)
             for link in links:
-                print(f'counter partial:{items_sent}')
+                print(items_sent)
                 try:
                     items_links = get_scroll_page(browser, link)
                 except Exception as e:
                     print(e)
                 else:
                     for item_link in items_links:
-                        future = fetch_item(item_link)
-                        future.add_done_callback(parse_info)
-                        items_sent += 1
-                        while True:
-                            if future.done:
-                                break
-            print(f'finish here!- number of items: {items_sent}')
+                        json_instance = json.dumps(item_link)
+                        parse_instance_from_plaza_vea.delay(json_instance)
+                        items_sent += 1 
         finally:
             if browser:
                 browser.quit()

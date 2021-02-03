@@ -187,6 +187,7 @@ CELERY_BEAT_SCHEDULE = {
 # }
 
 CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+CELERY_MAX_TASKS_PER_CHILD = 3
 
 ################################################################################
 # How to send email in Django project with Celery

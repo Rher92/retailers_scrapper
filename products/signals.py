@@ -10,7 +10,7 @@ from .models import Product
 @receiver(post_save, sender=Product)
 def save_instance_into_cache(sender, instance, **kwargs):
     product_pickled = pickle.dumps(instance)
-    cache.set(instance.sku, product_pickled)
+    #cache.set(instance.sku, product_pickled)
 
 
 @receiver(post_delete, sender=Product)
