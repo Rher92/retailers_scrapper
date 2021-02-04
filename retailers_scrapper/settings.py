@@ -145,13 +145,14 @@ if DEBUG:
 # How to setup Celery with Django
 ################################################################################
 
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://127.0.0.1:6379/0")
-CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND", "redis://127.0.0.1:6379/0")
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_WORKER_PREFETCH_MULTIPLIER = 1
-CELERY_MAX_TASKS_PER_CHILD = 3
+if DEBUG:
+    CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://127.0.0.1:6379/0")
+    CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND", "redis://127.0.0.1:6379/0")
+    CELERY_ACCEPT_CONTENT = ['json']
+    CELERY_TASK_SERIALIZER = 'json'
+    CELERY_RESULT_SERIALIZER = 'json'
+    CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+    CELERY_MAX_TASKS_PER_CHILD = 3
 
 # CELERY_BEAT_SCHEDULE = {
 #     'tottus_task': {
