@@ -6,8 +6,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         try:
-            #start_plazavea()
-            print('scrape tottus')
+            start_plazavea()
         except Exception as e:
             raise CommandError(f'the action couldnt be executed due to: {e}')
 
