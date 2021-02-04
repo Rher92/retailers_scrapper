@@ -8,7 +8,6 @@ hiredis==1.1.0  # https://github.com/redis/hiredis-py
 certifi==2020.12.5
 chardet==4.0.0
 chromedriver-install==1.0.3
-coverage==5.1
 Django==3.1.5
 django-appconf==1.0.4
 django-celery-beat==2.0.0
@@ -19,7 +18,6 @@ django-filter==2.4.0
 django-timezone-field==4.1.1
 djangorestframework==3.12.2
 EasyProcess==0.3
-factory-boy==2.12.0
 Faker==5.6.5
 flower==0.9.5
 humanize==3.2.0

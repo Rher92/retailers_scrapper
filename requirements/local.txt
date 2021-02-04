@@ -9,7 +9,6 @@ mypy==0.790  # https://github.com/python/mypy
 django-stubs==1.7.0  # https://github.com/typeddjango/django-stubs
 pytest==6.1.2  # https://github.com/pytest-dev/pytest
 pytest-sugar==0.9.4  # https://github.com/Frozenball/pytest-sugar
-pytest-django==3.8.0
 
 # Code quality
 # ------------------------------------------------------------------------------
@@ -24,7 +23,6 @@ pre-commit==2.8.2  # https://github.com/pre-commit/pre-commit
 # Django
 # ------------------------------------------------------------------------------
 factory-boy==3.1.0  # https://github.com/FactoryBoy/factory_boy
-django-extensions==3.0.9  # https://github.com/django-extensions/django-extensions
 django-coverage-plugin==1.8.0  # https://github.com/nedbat/django_coverage_plugin
 pytest-django==4.1.0  # https://github.com/pytest-dev/pytest-django
 django-storages[boto3]==1.9.1  # https://github.com/jschneier/django-storages

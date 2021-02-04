@@ -7,25 +7,24 @@ set -o pipefail
 # exits if any of your variables is not set
 set -o nounset
 
+export CELERY_BROKER_URL="${REDIS_URL}"
+
 postgres_ready() {
 python << END
 import sys
-
 import psycopg2
-
 try:
     psycopg2.connect(
-        dbname="${SQL_DATABASE}",
-        user="${SQL_USER}",
-        password="${SQL_PASSWORD}",
-        host="${SQL_HOST}",
-        port="${SQL_PORT}",
+        dbname="${POSTGRES_DB}",
+        user="${POSTGRES_USER}",
+        password="${POSTGRES_PASSWORD}",
+        host="${POSTGRES_HOST}",
+        port="${POSTGRES_PORT}",
     )
 except psycopg2.OperationalError as e:
     print(f'{e}')
     sys.exit(-1)
 sys.exit(0)
-
 END
 }
 until postgres_ready; do

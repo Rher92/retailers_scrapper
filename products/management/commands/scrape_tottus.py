@@ -6,7 +6,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         try:
-            start_tottus()
+            print('scrape tottus')
+            #start_tottus()
         except Exception as e:
             raise CommandError(f'the action couldnt be executed due to: {e}')
 

@@ -1,6 +1,7 @@
 import pickle
 import json
 
+from celery import shared_task
 from django.core import management
 import requests
 from bs4 import BeautifulSoup
@@ -148,7 +149,7 @@ def parse_instance_from_plaza_vea(self, url):
         raise Exception(f'Requests from {url} does not get status code: 200')
 
 
-@app.task(name='scrape_plaza_vea', autoretry_for=(Exception,), bind=True, retry_kwargs={'max_retries': 3, 'countdown': 5})
+@shared_task
 def scrape_plaza_vea():
     try:
         management.call_command("scrape_plaza_vea", verbosity=0)
@@ -158,7 +159,7 @@ def scrape_plaza_vea():
         print(e)
 
 
-@app.task(name='scrape_tottus', autoretry_for=(Exception,), bind=True, retry_kwargs={'max_retries': 3, 'countdown': 5})
+@shared_task
 def scrape_tottus():
     try:
         management.call_command("scrape_tottus", verbosity=0)
