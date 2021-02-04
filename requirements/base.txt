@@ -4,6 +4,7 @@ attrs==20.3.0
 beautifulsoup4==4.9.3
 billiard==3.6.3.0
 celery==4.4.0
+hiredis==1.1.0  # https://github.com/redis/hiredis-py
 certifi==2020.12.5
 chardet==4.0.0
 chromedriver-install==1.0.3
@@ -21,7 +22,6 @@ EasyProcess==0.3
 factory-boy==2.12.0
 Faker==5.6.5
 flower==0.9.5
-gunicorn==20.0.4
 humanize==3.2.0
 idna==2.10
 kombu==4.6.11
@@ -30,11 +30,8 @@ more-itertools==8.6.0
 packaging==20.8
 pluggy==0.13.1
 prometheus-client==0.8.0
-psycopg2-binary==2.8.5
 py==1.10.0
 pyparsing==2.4.7
-pytest==5.3.5
-pytest-django==3.8.0
 python-crontab==2.5.1
 python-dateutil==2.8.1
 python-memcached==1.59

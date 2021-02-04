@@ -12,9 +12,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os
 import environ
 from pathlib import Path
-
 from celery.schedules import crontab
 
+env = environ.Env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,9 +26,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY", "@=crw$+j%p5jkyvs@&bo(@c+6nnd@si86pi9r=l5bqq(55+vbc")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = int(os.environ.get("DEBUG", default=1))
+DEBUG = env.bool("DJANGO_DEBUG", False)
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(" ")
+if DEBUG:
+    ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(" ")
 
 # Application definition
 
@@ -65,7 +66,6 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
-        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -82,17 +82,17 @@ WSGI_APPLICATION = 'retailers_scrapper.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
-        "NAME": os.environ.get("SQL_DATABASE", os.path.join(BASE_DIR, "db.sqlite3")),
-        "USER": os.environ.get("SQL_USER", "user"),
-        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
-        "HOST": os.environ.get("SQL_HOST", "localhost"),
-        "PORT": os.environ.get("SQL_PORT", "5432"),
+if DEBUG:
+    DATABASES = {
+        "default": {
+            "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
+            "NAME": os.environ.get("SQL_DATABASE", os.path.join(BASE_DIR, "db.sqlite3")),
+            "USER": os.environ.get("SQL_USER", "user"),
+            "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
+            "HOST": os.environ.get("SQL_HOST", "localhost"),
+            "PORT": os.environ.get("SQL_PORT", "5432"),
+        }
     }
-}
 
 
 # Password validation
@@ -133,68 +133,25 @@ AUTH_USER_MODEL = 'user.User'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
+if DEBUG:
+    STATIC_URL = '/static/'
+    STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
 
 ################################################################################
 # How to setup Celery with Django
 ################################################################################
+if DEBUG:
+    CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://127.0.0.1:6379/0")
+    CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND", "redis://127.0.0.1:6379/0")
+    CELERY_ACCEPT_CONTENT = ['json']
+    CELERY_TASK_SERIALIZER = 'json'
+    CELERY_RESULT_SERIALIZER = 'json'
+    CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+    CELERY_MAX_TASKS_PER_CHILD = 3
 
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://127.0.0.1:6379/0")
-CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND", "redis://127.0.0.1:6379/0")
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-
-################################################################################
-# How to run period tasks with Celery and Django
-################################################################################
-
-CELERY_BEAT_SCHEDULE = {
-    # 'create_task': {
-    #     'task': 'tasks.simple_tasks.create_task',
-    #     "schedule": crontab(minute="*/1")
-    # },
-}
-
-################################################################################
-# How to make Celery work with multiple queues
-################################################################################
-
-# from kombu import Queue       # noqa
-#
-# CELERY_TASK_DEFAULT_QUEUE = 'default'
-#
-# # Force all queues to be explicitly listed in `CELERY_TASK_QUEUES` to help prevent typos
-# CELERY_TASK_CREATE_MISSING_QUEUES = False
-#
-# CELERY_TASK_QUEUES = (
-#     # need to define default queue here or exception would be raised
-#     Queue('default'),
-#
-#     Queue('high_priority'),
-#     Queue('low_priority'),
-# )
-#
-# CELERY_TASK_ROUTES = {
-#     'django_celery_example.celery.*': {
-#         'queue': 'high_priority',
-#     },
-# }
-
-CELERY_WORKER_PREFETCH_MULTIPLIER = 1
-CELERY_MAX_TASKS_PER_CHILD = 3
-
-################################################################################
-# How to send email in Django project with Celery
-################################################################################
-
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_PORT = 1025
 
 EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
 CELERY_EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -223,9 +180,10 @@ REST_FRAMEWORK = {
 
 
 LOCATION_CACHE = f"{os.environ.get('MEMCACHED')}:{os.environ.get('MEMCACHED_PORT')}"
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': LOCATION_CACHE,
+if DEBUG:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+            'LOCATION': LOCATION_CACHE,
+        }
     }
-}

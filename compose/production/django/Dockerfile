@@ -26,8 +26,10 @@ RUN GECKODRIVER_VERSION=`curl https://github.com/mozilla/geckodriver/releases/la
 # RUN addgroup --system django \
 #     && adduser --system --ingroup django django
 
-COPY ./requirements.txt /requirements.txt
-RUN pip install -r /requirements.txt
+# Requirements are installed here to ensure they will be cached.
+COPY ./requirements /requirements
+RUN pip install --no-cache-dir -r /requirements/production.txt \
+    && rm -rf /requirements
 
 COPY ./compose/production/django/entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint

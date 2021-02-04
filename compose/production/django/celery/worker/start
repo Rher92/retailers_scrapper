@@ -5,4 +5,4 @@ set -o pipefail
 set -o nounset
 
 
-exec celery -A retailers_scrapper worker -l INFO
+celery -A retailers_scrapper.celery worker -l INFO

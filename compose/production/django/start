@@ -8,4 +8,4 @@ set -o nounset
 python manage.py collectstatic --noinput
 python manage.py migrate
 
-gunicorn retailers_scrapper.wsgi:application --bind 0.0.0.0:8000 --chdir=/app
+gunicorn retailers_scrapper.wsgi:application --bind 0.0.0.0:5000 --chdir=/app

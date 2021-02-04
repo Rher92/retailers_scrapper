@@ -24,8 +24,8 @@ RUN GECKODRIVER_VERSION=`curl https://github.com/mozilla/geckodriver/releases/la
     rm geckodriver-$GECKODRIVER_VERSION-linux64.tar.gz
 
 # Requirements are installed here to ensure they will be cached.
-COPY ./requirements.txt /requirements.txt
-RUN pip install -r /requirements.txt
+COPY ./requirements /requirements
+RUN pip install -r /requirements/local.txt
 
 COPY ./compose/local/django/entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint
