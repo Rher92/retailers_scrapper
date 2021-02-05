@@ -14,7 +14,7 @@ services:
     ports:
       - 8000:8000
     env_file:
-      - ./.envs/.dev-sample
+      - ./envs/.dev-sample
     depends_on:
       - postgres
       - redis
@@ -45,7 +45,7 @@ services:
     volumes:
       - .:/app
     env_file:
-      - ./.envs/.dev-sample
+      - ./envs/.dev-sample
     depends_on:
       - redis
       - postgres
@@ -60,7 +60,7 @@ services:
     volumes:
       - .:/app
     env_file:
-      - ./.envs/.dev-sample
+      - ./envs/.dev-sample
     depends_on:
       - redis
       - postgres
@@ -75,7 +75,7 @@ services:
     volumes:
       - .:/app
     env_file:
-      - ./.envs/.dev-sample
+      - ./envs/.dev-sample
     ports:
       - 5555:5555
     depends_on:
