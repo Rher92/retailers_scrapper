@@ -11,6 +11,7 @@ services:
       context: .
       dockerfile: ./compose/production/django/Dockerfile
     image: scrapper_production_django
+    restart: on-failure:5
     depends_on:
       - postgres
       - redis
@@ -23,6 +24,7 @@ services:
       context: .
       dockerfile: ./compose/production/postgres/Dockerfile
     image: scrapper_production_postgres
+    restart: on-failure:5
     volumes:
       - production_postgres_data:/var/lib/postgresql/data:Z
       - production_postgres_data_backups:/backups:z
@@ -34,6 +36,7 @@ services:
       context: .
       dockerfile: ./compose/production/traefik/Dockerfile
     image: scrapper_production_traefik
+    restart: on-failure:5
     depends_on:
       - django
     volumes:
@@ -49,16 +52,19 @@ services:
   celeryworker:
     <<: *django
     image: scrapper_production_celeryworker
+    restart: on-failure:5
     command: /start-celeryworker
 
   celerybeat:
     <<: *django
     image: scrapper_production_celerybeat
+    restart: on-failure:5
     command: /start-celerybeat
 
   flower:
     <<: *django
     image: scrapper_production_flower
+    restart: on-failure:5
     command: /start-flower
 
   
@@ -66,6 +72,7 @@ services:
     build:
       context: .
       dockerfile: ./compose/production/aws/Dockerfile
+    restart: on-failure:5
     env_file:
       - ./.env
     volumes:
