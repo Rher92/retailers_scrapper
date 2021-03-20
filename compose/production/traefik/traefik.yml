@@ -1,18 +1,12 @@
 log:
   level: INFO
-
 entryPoints:
   web:
     # http
     address: ":80"
-
   web-secure:
     # https
     address: ":443"
-
-  flower:
-    address: ":5555"
-
 certificatesResolvers:
   letsencrypt:
     # https://docs.traefik.io/master/https/acme/#lets-encrypt
@@ -22,20 +16,18 @@ certificatesResolvers:
       # https://docs.traefik.io/master/https/acme/#httpchallenge
       httpChallenge:
         entryPoint: web
-
 http:
   routers:
     web-router:
-      rule: "Host(`retailers.rher92.me`) || Host(`www.retailers.rher92.me`)"
+      rule: "Host(`test.rher92.me`) || Host(`www.test.rher92.me`)"
       entryPoints:
         - web
       middlewares:
         - redirect
         - csrf
       service: django
-
     web-secure-router:
-      rule: "Host(`retailers.rher92.me`) || Host(`www.retailers.rher92.me`)"
+      rule: "Host(`test.rher92.me`) || Host(`www.test.rher92.me`)"
       entryPoints:
         - web-secure
       middlewares:
@@ -44,16 +36,21 @@ http:
       tls:
         # https://docs.traefik.io/master/routing/routers/#certresolver
         certResolver: letsencrypt
-
-    flower-secure-router:
-      rule: "Host(`retailers.rher92.me`) || Host(`www.retailers.rher92.me`)"
+    flower-router:
+      rule: "Host(`flower.rher92.me`)"
       entryPoints:
-        - flower
+        - web
+      middlewares:
+        - redirect
+      service: flower
+    flower-secure-router:
+      rule: "Host(`flower.rher92.me`)"
+      entryPoints:
+        - web-secure
       service: flower
       tls:
         # https://docs.traefik.io/master/routing/routers/#certresolver
         certResolver: letsencrypt
-
   middlewares:
     redirect:
       # https://docs.traefik.io/master/middlewares/redirectscheme/
@@ -65,18 +62,15 @@ http:
       # https://docs.djangoproject.com/en/dev/ref/csrf/#ajax
       headers:
         hostsProxyHeaders: ["X-CSRFToken"]
-
   services:
     django:
       loadBalancer:
         servers:
           - url: http://django:5000
-
     flower:
       loadBalancer:
         servers:
           - url: http://flower:5555
-
 providers:
   # https://docs.traefik.io/master/providers/file/
   file:
